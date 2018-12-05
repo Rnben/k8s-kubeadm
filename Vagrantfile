@@ -82,5 +82,5 @@ networking:
   podSubnet: 10.244.0.0/16
 EOF
 
-curl -o /root/flannel.yaml 
+curl https://raw.githubusercontent.com/Rnben/k8s-kubeadm/master/flannel.yaml -o /root/flannel.yaml
 SCRIPT
