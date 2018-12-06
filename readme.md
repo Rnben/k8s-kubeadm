@@ -60,6 +60,31 @@ kubectl get cs
 kubectl get nodes
 ```
 
+8. Join node
+
+**Option 1**
+```
+# join node
+kubeadm join --token <token> <master-ip>:<master-port> --discovery-token-ca-cert-hash sha256:<hash>
+
+# list token
+kubeadm token list
+
+# discovery-token-ca-cert-hash
+root@ubuntu:/home/cong# openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
+
+```
+**Option 2**
+```
+kubeadm token create --print-join-command
+```
+
+9. delete node
+```
+kubectl drain <node name> --delete-local-data --force --ignore-daemonsets
+kubectl delete node <node name>
+```
+
 
 
 
