@@ -49,7 +49,7 @@ curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-
 yum makecache
 
 # docker
-yum install -y yum-utils
+yum install -y yum-utils ipvsadm
 yum-config-manager \
     --add-repo \
     https://download.daocloud.io/docker/linux/centos/docker-ce.repo
@@ -70,6 +70,14 @@ cat <<EOF >/etc/sysconfig/kubelet
 KUBELET_EXTRA_ARGS="--cgroup-driver=$DOCKER_CGROUPS --pod-infra-container-image=registry.cn-hangzhou.aliyuncs.com/google_containers/pause-amd64:3.1"
 EOF
 
+cat >> /etc/profile <<EOF
+modprobe -- ip_vs
+modprobe -- ip_vs_rr
+modprobe -- ip_vs_wrr
+modprobe -- ip_vs_sh
+modprobe -- nf_conntrack_ipv4
+EOF
+
 cat > /root/kubeadm-master.config <<EOF
 apiVersion: kubeadm.k8s.io/v1alpha2
 kind: MasterConfiguration
@@ -78,9 +86,15 @@ kubernetesVersion: v1.11.2
 api:
   advertiseAddress: 11.11.11.101
 imageRepository: registry.cn-hangzhou.aliyuncs.com/google_containers
+kubeProxy:
+  config:
+    mode: "ipvs"
 networking:
   podSubnet: 10.244.0.0/16
 EOF
 
 curl https://raw.githubusercontent.com/Rnben/k8s-kubeadm/master/flannel.yaml -o /root/flannel.yaml
+
+echo "check ipvs ready"
+lsmod|grep ip_vs
 SCRIPT
