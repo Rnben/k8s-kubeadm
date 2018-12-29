@@ -1,0 +1,26 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: demo
+spec:
+  gateways:
+  - demo-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - headers:
+        user-agent:
+          regex: ".*Chrome.*"
+    route:
+      - destination:
+          host: demo
+          subset: v2
+  - match:
+    - headers:
+        user-agent:
+          regex: ".*Firefox.*"
+    route:
+      - destination:
+          host: demo
+          subset: v1

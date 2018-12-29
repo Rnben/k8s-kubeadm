@@ -1,0 +1,25 @@
+kind: VirtualService
+metadata:
+  name: demo
+spec:
+  hosts:
+  - '*'
+  http:
+  - route:
+    - destination:
+        host: demo
+        port:
+          number: 80
+        subset: v1
+      weight: 100
+    - destination:
+        host: demo
+        port:
+          number: 80
+        subset: v2
+      weight: 0
+    match:
+    - uri:
+        prefix: /
+  gateways:
+  - demo-gateway

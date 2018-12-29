@@ -57,3 +57,4 @@ curl -o /dev/null -s -w "%{http_code}\n" http://${GATEWAY_URL}/productpage
 
 ## See so
 https://istio.io/docs/examples/bookinfo/
+https://istio.io/zh/blog/2018/v1alpha3-routing/
