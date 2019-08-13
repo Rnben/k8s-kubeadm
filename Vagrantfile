@@ -18,6 +18,20 @@ Vagrant.configure("2") do |config|
           vb.customize ["modifyvm", :id, "--cpus", "2"]
     end
   end
+
+  config.vm.define "node" do |node|
+    node.vm.box = "bento/centos-7.4"
+    node.vm.hostname = "node"
+    node.ssh.username = "root"
+    node.ssh.password = "vagrant"
+    node.ssh.insert_key = true
+    node.vm.box_check_update = false
+    node.vm.network "private_network", ip: "11.11.11.102"
+    node.vm.provider "virtualbox" do |vb|
+          vb.customize ["modifyvm", :id, "--name", "node", "--memory", "1024"]
+          vb.customize ["modifyvm", :id, "--cpus", "1"]
+    end
+  end
 end
 
 $script = <<-SCRIPT
@@ -42,6 +56,7 @@ sysctl -p /etc/sysctl.d/k8s.conf
 # hosts配置
 cat <<EOF > /etc/hosts
 11.11.11.101 master
+11.11.11.102 node
 EOF
 
 # modules
@@ -53,6 +68,7 @@ modprobe -- ip_vs_wrr
 modprobe -- ip_vs_sh
 modprobe -- nf_conntrack_ipv4
 EOF
+
 chmod 755 /etc/sysconfig/modules/ipvs.modules && bash /etc/sysconfig/modules/ipvs.modules && lsmod | grep -e ip_vs -e nf_conntrack_ipv4
 
 # aliyun
