@@ -4,6 +4,7 @@ go 1.12
 
 require (
 	github.com/jinzhu/gorm v1.9.10 // indirect
+	github.com/jmcvetta/randutil v0.0.0-20150817122601-2bb1b664bcff // indirect
 	github.com/spf13/viper v1.4.0 // indirect
 	go.elastic.co/apm/module/apmgrpc v1.5.0 // indirect
 	golang.org/x/net v0.0.0-20190724013045-ca1201d0de80
